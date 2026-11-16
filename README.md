@@ -15,6 +15,7 @@ The service accepts JSON alerts, simulates a three-second processing task withou
 - **Health monitoring:** `GET /health` checks database connectivity.
 - **Reproducible setup:** Docker Compose starts PostgreSQL, applies database migrations, and launches the API.
 - **Automated checks:** Unit tests, a PostgreSQL-backed smoke test, linting, and a GitHub Actions workflow are included.
+- **Live deployment:** Hosted on an AWS EC2 Ubuntu server using Docker Compose and Caddy with HTTPS.
 
 ## Tech Stack
 
@@ -28,6 +29,64 @@ The service accepts JSON alerts, simulates a three-second processing task withou
 | Containerization | Docker, Docker Compose |
 | Testing and linting | pytest, HTTPX, Ruff |
 | CI | GitHub Actions |
+| Cloud hosting | AWS EC2 (Ubuntu Server 24.04 LTS) |
+| Reverse proxy / HTTPS | Caddy, Let's Encrypt |
+
+## Live Deployment (AWS EC2)
+
+The application is deployed on an **AWS EC2 Ubuntu Server 24.04 LTS** instance. Docker Compose manages PostgreSQL, the Alembic migration, FastAPI, and a Caddy reverse proxy. Caddy terminates HTTPS using a publicly trusted Let's Encrypt certificate.
+
+| Resource | Public URL |
+| --- | --- |
+| API base URL | https://16-192-153-52.sslip.io |
+| Interactive API documentation (Swagger UI) | https://16-192-153-52.sslip.io/docs |
+| Health check | https://16-192-153-52.sslip.io/health |
+| Processed alerts | https://16-192-153-52.sslip.io/alerts |
+
+To test the hosted API, open **Swagger UI**, select `POST /webhook`, choose **Try it out**, submit a valid JSON alert, and then use `GET /alerts` to retrieve processed records. New alerts normally return `201 Created` after approximately three seconds.
+
+### Deployment architecture
+
+```text
+Public client (HTTPS :443)
+         |
+         v
+  Caddy reverse proxy
+         |
+         v
+  FastAPI / Uvicorn (:8000, internal)
+         |
+         v
+  PostgreSQL 17 (:5432, internal)
+
+Alembic migration runs before the API starts.
+```
+
+### Reproducing the Linux deployment
+
+On a Linux server with Docker Engine, Docker Compose, and Git installed, clone the repository and create an environment file:
+
+```bash
+git clone https://github.com/salmayasser23/webhook-processor.git
+cd webhook-processor
+cp .env.example .env
+nano .env
+chmod 600 .env
+```
+
+Set a unique `POSTGRES_PASSWORD` and keep the other database settings from `.env.example`. For HTTPS, add `WEBHOOK_DOMAIN=your-public-hostname` to `.env`; the hostname must resolve to the server's public IP. Allow inbound TCP ports **80** and **443** and restrict SSH (port 22) to trusted IP addresses. Do not expose ports 5432 or 8000 publicly.
+
+Start the Linux deployment:
+
+```bash
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml ps -a
+python3 scripts/smoke_test.py
+```
+
+Caddy handles certificate issuance and HTTPS termination. The public hostname used for this demonstration is based on the EC2 public IPv4 address; **if that address changes, the hostname and links must be updated**.
+
+> **Security note:** This is an assessment demonstration deployment, not a hardened production webhook service. Authentication, authorization, rate limiting, and other production controls would be required before accepting untrusted real-world alerts.
 
 ## Quick Start (Docker)
 
@@ -246,8 +305,8 @@ The included GitHub Actions workflow performs linting, syntax checks, unit tests
 ├── .env.example               # Example environment configuration
 ├── Dockerfile                 # API container image
 ├── docker-compose.yml         # Local API, migration, and database services
-├── docker-compose.prod.yml    # Optional reverse-proxy configuration
-├── Caddyfile                  # Optional HTTPS reverse proxy
+├── docker-compose.prod.yml    # Linux deployment with Caddy
+├── Caddyfile                  # HTTPS reverse proxy configuration
 ├── requirements.txt           # Runtime dependencies
 ├── requirements-dev.txt       # Test and lint dependencies
 └── README.md
@@ -283,3 +342,4 @@ PostgreSQL data is stored in the named `postgres_data` volume. `docker compose d
 
 ---
 
+**Assessment project:** AI & Automation Software Engineer — Webhook Processor.
