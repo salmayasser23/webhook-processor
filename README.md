@@ -86,7 +86,6 @@ python3 scripts/smoke_test.py
 
 Caddy handles certificate issuance and HTTPS termination. The public hostname used for this demonstration is based on the EC2 public IPv4 address; **if that address changes, the hostname and links must be updated**.
 
-> **Security note:** This is an assessment demonstration deployment, not a hardened production webhook service. Authentication, authorization, rate limiting, and other production controls would be required before accepting untrusted real-world alerts.
 
 ## Quick Start (Docker)
 
