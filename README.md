@@ -342,4 +342,3 @@ PostgreSQL data is stored in the named `postgres_data` volume. `docker compose d
 
 ---
 
-**Assessment project:** AI & Automation Software Engineer — Webhook Processor.
