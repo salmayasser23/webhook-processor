@@ -118,7 +118,7 @@ Edit `.env` and replace the example database password with your own value:
 
 ```dotenv
 POSTGRES_USER=webhook_user
-POSTGRES_PASSWORD=replace_with_a_strong_password
+POSTGRES_PASSWORD=replace_with_a_password
 POSTGRES_DB=webhook_db
 PROCESSING_DELAY_SECONDS=3
 ```
