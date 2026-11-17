@@ -64,6 +64,7 @@ Alembic migration runs before the API starts.
 ### Deployment Verification
 
 The following screenshot demonstrates the successful public AWS EC2 deployment, showing an HTTP 200 response from GET /alerts.
+
 <img width="891" height="917" alt="image" src="https://github.com/user-attachments/assets/913eddb2-5031-4031-bceb-ed0881cfeedf" />
 
 ### Reproducing the Linux deployment
