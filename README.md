@@ -159,6 +159,44 @@ Once the API is ready, open:
 
 The API is bound to `127.0.0.1:8000` for local use. PostgreSQL is accessible to the application through Docker's internal network; its port is not published to the host.
 
+### Local Deployment Verification
+
+The application was successfully launched locally using Docker Compose, with FastAPI handling incoming requests and PostgreSQL providing persistent storage.
+
+The following screenshots document local testing at `http://127.0.0.1:8000`.
+
+**Swagger UI — API Documentation**
+
+The interactive Swagger interface provides access to the application's endpoints for submitting webhook alerts, retrieving processed records, and checking service health.
+
+<img width="1858" height="1017" alt="image" src="https://github.com/user-attachments/assets/41e4f985-b871-4afd-9346-b289560cce41" />
+
+
+**Webhook Processing — `POST /webhook`**
+
+A valid JSON alert was submitted through Swagger UI. The endpoint returned HTTP `201 Created` after approximately three seconds, confirming processing and persistence.
+
+<img width="1830" height="857" alt="Screenshot 2026-11-17 164721" src="https://github.com/user-attachments/assets/4675c0f4-8825-414c-85e5-87a7d0865fb4" />
+<img width="1784" height="771" alt="Screenshot 2026-11-17 164736" src="https://github.com/user-attachments/assets/7a6740c5-618d-46c1-a08d-a6d282d4a896" />
+
+
+
+**Alert Retrieval — `GET /alerts`**
+
+The `GET /alerts` endpoint returned HTTP `200 OK`, displaying processed alert records retrieved from PostgreSQL.
+
+<img width="1801" height="359" alt="Screenshot 2026-11-17 164754" src="https://github.com/user-attachments/assets/10470c61-f2be-4ef1-a875-81056513e009" />
+<img width="1788" height="775" alt="Screenshot 2026-11-17 164851" src="https://github.com/user-attachments/assets/3862170e-b203-4012-9f16-bd3fb156df2d" />
+
+
+
+**Service Health — `GET /health`**
+
+The health-check endpoint returns HTTP `200 OK` with `{"status": "ok"}` when the application and database connection are healthy.
+
+<img width="1857" height="1018" alt="image" src="https://github.com/user-attachments/assets/0bcdcd8a-96da-4d7c-b390-71f7ee200cd5" />
+
+
 ## API Reference
 
 ### `POST /webhook` — Process an alert
