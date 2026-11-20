@@ -38,10 +38,10 @@ The application is deployed on an **AWS EC2 Ubuntu Server 24.04 LTS** instance. 
 
 | Resource | Public URL |
 | --- | --- |
-| API base URL | https://16-192-153-52.sslip.io |
-| Interactive API documentation (Swagger UI) | https://16-192-153-52.sslip.io/docs |
-| Health check | https://16-192-153-52.sslip.io/health |
-| Processed alerts | https://16-192-153-52.sslip.io/alerts |
+| API base URL | https://16-16-142-35.sslip.io |
+| Interactive API documentation (Swagger UI) | https://16-16-142-35.sslip.io/docs |
+| Health check | https://16-16-142-35.sslip.io/health |
+| Processed alerts | https://16-16-142-35.sslip.io/alerts |
 
 To test the hosted API, open **Swagger UI**, select `POST /webhook`, choose **Try it out**, submit a valid JSON alert, and then use `GET /alerts` to retrieve processed records. New alerts normally return `201 Created` after approximately three seconds.
 
@@ -65,7 +65,8 @@ Alembic migration runs before the API starts.
 
 The following screenshot demonstrates the successful public AWS EC2 deployment, showing an HTTP 200 response from GET /alerts.
 
-<img width="891" height="917" alt="image" src="https://github.com/user-attachments/assets/913eddb2-5031-4031-bceb-ed0881cfeedf" />
+<img width="1862" height="966" alt="image" src="https://github.com/user-attachments/assets/177caa4a-aa29-49be-b7b8-c1330231899b" />
+
 
 ### Reproducing the Linux deployment
 
